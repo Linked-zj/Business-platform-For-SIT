@@ -1,0 +1,11 @@
+2019-06-05 22:42:05.955 [main] DEBUG com._520it.o2o.dao.ShopDao.queryShopById - ==>  Preparing: select s.shop_id, s.shop_name, s.shop_desc, s.shop_addr, s.phone, s.shop_img, s.priority, s.create_time, s.last_edit_time, s.enable_status, s.advice, a.area_id, a.area_name, sc.shop_category_id, sc.shop_category_name from tb_shop s,tb_area a,tb_shop_category sc where s.area_id=a.area_id and s.shop_category_id=sc.shop_category_id and s.shop_id=? 
+2019-06-05 22:42:06.128 [main] DEBUG com._520it.o2o.dao.ShopDao.queryShopById - ==> Parameters: 1(Long)
+2019-06-05 22:42:06.174 [main] DEBUG com._520it.o2o.dao.ShopDao.queryShopById - <==      Total: 1
+2019-06-05 22:42:06.224 [main] DEBUG com._520it.o2o.util.ImageUtil - current relativeAddr is:\upload\images\item\shop\1\2019060522420679741.png
+2019-06-05 22:42:06.225 [main] DEBUG com._520it.o2o.util.ImageUtil - current complete addr is:F:\images\upload\images\item\shop\1\2019060522420679741.png
+2019-06-05 22:42:06.651 [main] DEBUG com._520it.o2o.dao.ShopDao.updateShop - ==>  Preparing: update tb_shop SET shop_name=?, shop_img=?, last_edit_time=? where shop_id=? 
+2019-06-05 22:42:06.654 [main] DEBUG com._520it.o2o.dao.ShopDao.updateShop - ==> Parameters: 测试的店铺(String), \upload\images\item\shop\1\2019060522420679741.png(String), 2019-06-05 22:42:06.624(Timestamp), 1(Long)
+2019-06-05 22:42:06.658 [main] DEBUG com._520it.o2o.dao.ShopDao.updateShop - <==    Updates: 1
+2019-06-05 22:42:06.658 [main] DEBUG com._520it.o2o.dao.ShopDao.queryShopById - ==>  Preparing: select s.shop_id, s.shop_name, s.shop_desc, s.shop_addr, s.phone, s.shop_img, s.priority, s.create_time, s.last_edit_time, s.enable_status, s.advice, a.area_id, a.area_name, sc.shop_category_id, sc.shop_category_name from tb_shop s,tb_area a,tb_shop_category sc where s.area_id=a.area_id and s.shop_category_id=sc.shop_category_id and s.shop_id=? 
+2019-06-05 22:42:06.659 [main] DEBUG com._520it.o2o.dao.ShopDao.queryShopById - ==> Parameters: 1(Long)
+2019-06-05 22:42:06.661 [main] DEBUG com._520it.o2o.dao.ShopDao.queryShopById - <==      Total: 1

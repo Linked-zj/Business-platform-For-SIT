@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com._520it.o2o.dao.ProductDao">
+
+	<resultMap type="com._520it.o2o.entity.Product"
+		id="productMap">
+		<id column="product_id" property="productId" />
+		<result column="product_name" property="productName" />
+		<result column="product_desc" property="productDesc" />
+		<result column="img_addr" property="imgAddr" />
+		<result column="normal_price" property="normalPrice" />
+		<result column="promotion_price" property="promotionPrice" />
+		<result column="create_time" property="createTime" />
+		<result column="last_edit_time" property="lastEditTime" />
+		<result column="enable_status" property="enableStatus" />
+		<association property="productCategory"
+			column="product_category_id"
+			javaType="com._520it.o2o.entity.ProductCategory">
+			<id column="product_category_id" property="productCategoryId" />
+			<result column="product_category_name"
+				property="productCategoryName" />
+		</association>
+		<association property="shop" column="shop_id"
+			javaType="com._520it.o2o.entity.Shop">
+			<id column="shop_id" property="shopId" />
+			<result column="shop_name" property="shopName" />
+		</association>
+		<collection property="productImgList" column="product_id"
+			ofType="com._520it.o2o.entity.ProductImg">
+			<id column="product_img_id" property="productImgId" />
+			<result column="img_addr" property="imgAddr" />
+			<result column="img_desc" property="imgDesc" />
+			<result column="priority" property="priority" />
+			<result column="create_time" property="createTime" />
+			<result column="product_id" property="productId" />
+		</collection>
+
+	</resultMap>
+	<select id="queryProductList"
+		resultType="com._520it.o2o.entity.Product">
+		select
+		product_id,
+		product_name,
+		product_desc,
+		img_addr,
+		normal_price,
+		promotion_price,
+		priority,
+		create_time,
+		last_edit_time,
+		enable_status,
+		product_category_id,
+		shop_id
+		from
+		tb_product
+		<where>
+			<if
+				test="productCondition.shop !=null and productCondition.shop.shopId !=null">
+				and shop_id=#{productCondition.shop.shopId}
+			</if>
+			<if
+				test="productCondition.productCategory !=null and productCondition.productCategory.productCategoryId !=null">
+				and
+				product_category_id=#{productCondition.productCategory.productCategoryId}
+			</if>
+			<if test="productCondition.productName !=null">
+				and product_name like '%${productCondition.productName}%'
+			</if>
+			<if test="productCondition.enableStatus !=null">
+				and enable_status=#{productCondition.enableStatus}
+			</if>
+		</where>
+		order by priority desc
+		limit #{rowIndex},#{pageSize};
+	</select>
+
+	<select id="queryProductCount" resultType="int">
+		select count(1) from tb_product
+		<where>
+			<if
+				test="productCondition.shop !=null and productCondition.shop.shopId !=null">
+				and shop_id=#{productCondition.shop.shopId}
+			</if>
+			<if
+				test="productCondition.productCategory !=null and productCondition.productCategory.productCategoryId !=null">
+				and
+				product_category_id=#{productCondition.productCategory.productCategoryId}
+			</if>
+			<if test="productCondition.productName !=null">
+				and product_name like '%${productCondition.productName}%'
+			</if>
+			<if test="productCondition.enableStatus !=null">
+				and enable_status=#{productCondition.enableStatus}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryProductById" resultMap="productMap">
+		select
+		p.product_id,
+		p.product_name,
+		p.product_desc,
+		p.img_addr,
+		p.normal_price,
+		p.promotion_price,
+		p.priority,
+		p.create_time,
+		p.last_edit_time,
+		p.enable_status,
+		p.product_category_id,
+		p.shop_id,
+		pm.product_img_id,
+		pm.img_addr as detail_img,
+		pm.img_desc,
+		pm.priority,
+		pm.create_time
+		from
+		tb_product p
+		left join
+		tb_product_img pm
+		on
+		p.product_id=pm.product_id
+		where
+		p.product_id=#{productId}
+		order by
+		pm.priority desc
+	</select>
+
+	<update id="updateProduct" useGeneratedKeys="true"
+		keyColumn="productId">
+		update tb_product
+		<set>
+			<if test="productName !=null">product_name=#{productName},</if>
+			<if test="productDesc !=null">product_desc=#{productDesc},</if>
+			<if test="imgAddr !=null">img_addr=#{imgAddr},</if>
+			<if test="normalPrice !=null">normal_price=#{normalPrice},</if>
+			<if test="promotionPrice!=null">promotion_price=#{promotionPrice},</if>
+			<if test="priority !=null">priority=#{priority},</if>
+			<if test="createTime !=null">create_time=#{createTime},</if>
+			<if test="lastEditTime !=null">last_edit_time=#{lastEditTime},</if>
+			<if test="enableStatus !=null">enable_status=#{enableStatus},</if>
+			<if
+				test="productCategory !=null and productCategory.productCategoryId!=null">
+				product_category_id=#{productCategory.productCategoryId}
+			</if>
+		</set>
+		<where>
+			product_id=#{productId} and shop_id=#{shop.shopId}
+		</where>
+
+
+
+	</update>
+
+
+	<insert id="insertProduct" useGeneratedKeys="true"
+		keyProperty="productId" keyColumn="product_id">
+		insert into
+		tb_product(product_name,product_desc,img_addr,
+		normal_price,promotion_price,priority,create_time,
+		last_edit_time,enable_status,product_category_id,
+		shop_id)
+		values
+		(#{productName},#{productDesc},#{imgAddr},
+		#{normalPrice},#{promotionPrice},#{priority},#{createTime},
+		#{lastEditTime},#{enableStatus},#{productCategory.productCategoryId},
+		#{shop.shopId})
+	</insert>
+
+	<update id="updateProductCategoryToNull">
+	update tb_product
+	set product_category_id=null
+	where
+	product_category_id=#{productCategoryId}
+	
+	</update>
+
+</mapper>
